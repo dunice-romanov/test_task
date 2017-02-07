@@ -1,0 +1,82 @@
+body {
+    background: azure url('assets/background.jpg') center no-repeat;
+}
+
+div.divInput {
+    margin: 0 auto;
+    text-align: center;
+    width: 500px;
+    padding: 10px;
+    border: 1px dashed black;
+    background: aquamarine;
+    margin-bottom: 50px;
+    margin-top: 50px;
+}
+
+div.divTable {
+    margin: 0 auto;
+}
+
+#tableTasks {
+    margin: 0 auto;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    border-collapse: collapse;
+}
+
+#tableTasks .writable-input,
+#tableTasks td {
+    font-size: 20px;
+}
+#tableTasks td {
+    padding: 5px;
+}
+
+#tableTasks th {
+    background: lightcoral;
+    color: white;
+    text-shadow: 0 1px 1px #2D2020;
+    padding: 10px 20px;
+}
+#tableTasks th, 
+#tableTasks td {
+    border-bottom: 2px solid black;
+}
+tr {
+    background-color:aliceblue
+}
+tr:nth-child(2n) {
+    background-color: beige;
+}
+
+div.divInput > input {
+    min-height: 30px;
+}
+
+#tableTasks [type="text"] {
+    background: red;
+}
+
+div.divInput > input[type="text"] {
+    width: 150px;
+}
+
+input[type="button"] {
+    width: 100;
+    border-radius: 8px;
+    background: bisque;
+    font-size: 20px;
+}
+
+
+
+#tableTasks .writable-input {
+    outline: none;
+    border-radius: 6px;
+    background-color:azure;
+    text-align: center;
+}
+#tableTasks .writable-input:focus {
+    background-color:bisque;
+}

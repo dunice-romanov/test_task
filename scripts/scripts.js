@@ -99,6 +99,11 @@
         return element;
     }
     
+    /*
+        TODO: Разобраться с форматом даты, что бы 
+        она нормально подключалась после обновления страницы
+    */
+    
     function makeRowsFromKeys(keys) {
         if (keys == null) 
             return;
@@ -117,7 +122,7 @@
                 author = localStorageObjects[i].author,
                 done = localStorageObjects[i].done,
                 updated = localStorageObjects[i].date;
-            
+                debugger;
             makeRow(id, done, title, author, new Date(id));
         }
         
@@ -191,13 +196,13 @@
         var id = $(tr).attr('id'), 
             attribute = $(td).attr('data-id'),
             value = $(input).val();
-        console.log(localStorage.getItem(id));
+        //console.log(localStorage.getItem(id));
         if (changeObjectInLocalStorage(id, attribute, value)) {
             
             var updated = $(tr).children().last();
             updated[0].innerText = getDateFormat(new Date());
-            console.log('updated!');
-            console.log(localStorage.getItem(id));
+//            console.log('updated!');
+//            console.log(localStorage.getItem(id));
         } else {
             return;
         }
