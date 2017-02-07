@@ -6,7 +6,6 @@
         this.author = author;
         this.done = false;
         this.updated = new Date();
-
     }
 
     var localStData = new CreateLocalStorageData("hello", "world");
@@ -32,7 +31,7 @@
             status = document.getElementById('statusCheckBox').checked;
         
         var newRow = makeRow(status, name, author);
-        $("#firstRow").append(newRow);
+        $("#table").append(newRow);
     };
 
 
