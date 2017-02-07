@@ -48,7 +48,7 @@
             return false;
             
         } else {
-            
+            debugger;
             oldLocalStorageObject[attribute] = value;
             oldLocalStorageObject.updated = new Date();
 
@@ -72,7 +72,7 @@
     function makeRow(id, status, name, author, date) {
         
         function makeRowInnerHtml(id, status, name, author, date) {
-            var TAG_INPUT_FIRST_HALF = "<input class='writable-input' value=' ",
+            var TAG_INPUT_FIRST_HALF = "<input class='writable-input' value='",
                 TAG_INPUT_SECOND_HALF = "'>";
             var htmlResult = "<td data-id='done'>" +  status +  "</td>" +  
                 "<td data-id='title'>" + TAG_INPUT_FIRST_HALF + name + TAG_INPUT_SECOND_HALF + "</td>" + 
@@ -152,10 +152,10 @@
         var id = $(tr).attr('id'), 
             attribute = $(td).attr('data-id'),
             value = $(input).val();
-        
+        debugger;
         console.log(localStorage.getItem(id));
-        
         if (changeObjectInLocalStorage(id, attribute, value)) {
+            //debugger;
             var updated = $(tr).children().last();
             updated[0].innerText = getDateFormat(new Date());
             console.log('updated!');
