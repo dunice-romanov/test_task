@@ -48,7 +48,6 @@
             return false;
             
         } else {
-            debugger;
             oldLocalStorageObject[attribute] = value;
             oldLocalStorageObject.updated = new Date();
 
@@ -152,10 +151,9 @@
         var id = $(tr).attr('id'), 
             attribute = $(td).attr('data-id'),
             value = $(input).val();
-        debugger;
         console.log(localStorage.getItem(id));
         if (changeObjectInLocalStorage(id, attribute, value)) {
-            //debugger;
+            
             var updated = $(tr).children().last();
             updated[0].innerText = getDateFormat(new Date());
             console.log('updated!');
