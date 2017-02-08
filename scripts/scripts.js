@@ -11,7 +11,7 @@
         KEY_SEPARATOR = ';|';
         
         
-    init();
+    init(); 
    
     /*
         initialize page on start
@@ -114,10 +114,20 @@
     
     function makeRow(id, status, name, author, date) {
         
+        function getCheckboxTag(status) {
+            var tagFirstHalf = "<input class='checkbox' type='checkbox' ",
+                tagSecondHalf = ">";
+            if (status) {
+                return tagFirstHalf + 'checked' + tagSecondHalf;
+            } else {
+                return tagFirstHalf + 'unchecked' + tagSecondHalf;
+            }
+        }
+        
         function makeRowInnerHtml(id, status, name, author, date) {
             var TAG_INPUT_FIRST_HALF = "<input type='text' class='writable-input' value='",
                 TAG_INPUT_SECOND_HALF = "'>";
-            var htmlResult = "<td data-id='done'>" +  status +  "</td>" +  
+            var htmlResult = "<td data-id='done'>" + getCheckboxTag(status) +  
                 "<td data-id='title'>" + TAG_INPUT_FIRST_HALF + name + TAG_INPUT_SECOND_HALF + "</td>" + 
                 "<td data-id='author'>" + TAG_INPUT_FIRST_HALF + author + TAG_INPUT_SECOND_HALF + "</td>" + 
                 "<td data-id='updated'>" + getDateFormat(date) + "</td>" +
@@ -299,7 +309,25 @@
         } else {
             return;
         }
+    });
+    
+    $("#" + ID_TABLE_TASKS).on('click', '.checkbox', function(ev) {
+        var input = ev.target;
+        var td = input.parentNode;
+        var tr = td.parentNode;
         
+        
+        var id = $(tr).attr('id'), 
+            attribute = $(td).attr('data-id'),
+            value = input.checked;
+        
+        if (changeObjectInLocalStorage(id, attribute, value)) {
+            
+            var updated = $(tr).children().eq(3);
+            updated[0].innerText = getDateFormat(new Date());
+        } else {
+            return;
+        }
         
     });
     
