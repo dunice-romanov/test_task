@@ -17,12 +17,25 @@ div.divTable {
     margin: 0 auto;
 }
 
+div.sortable p,
+div.sortable input {
+    display: inline;
+}
+
+
 #tableTasks {
+    width: 900px;
     margin: 0 auto;
     text-align: center;
     font-family: 'Open Sans', sans-serif;
     font-weight: bold;
     border-collapse: collapse;
+}
+
+#tableTasks th {
+    background: lightcoral;
+    color: white;
+    text-shadow: 0 1px 1px #2D2020;
 }
 
 #tableTasks .writable-input,
@@ -45,12 +58,7 @@ div.divTable {
     color: antiquewhite
 }
 
-#tableTasks th {
-    background: lightcoral;
-    color: white;
-    text-shadow: 0 1px 1px #2D2020;
-    padding: 10px 20px;
-}
+
 #tableTasks th, 
 #tableTasks td {
     border-bottom: 2px solid black;
@@ -81,11 +89,18 @@ div.divInput > input[type="text"] {
     width: 150px;
 }
 
+
 input[type="button"] {
     width: 100;
     border-radius: 8px;
     background: bisque;
     font-size: 20px;
+}
+
+div.sortable input[type='button'] {
+    
+    width: 20px;
+    height: 20px;
 }
 
 #tableTasks .writable-input {
@@ -94,6 +109,8 @@ input[type="button"] {
     background-color:azure;
     text-align: center;
 }
-#tableTasks .writable-input:focus {
-    background-color:bisque;
+
+#tableTasks .writable-input:focus,
+#div.divInput input[type='text']:focus{
+    background-color: bisque;
 }

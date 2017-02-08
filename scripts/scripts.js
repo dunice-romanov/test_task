@@ -17,7 +17,13 @@
         initialize page on start
     */
     function init() {
-        makeRowsFromObjectArray(getKeysObjects(KEY));
+        var newArray = getKeysObjects(KEY);
+        newArray = sortObjectsArray('updated', newArray);
+        makeRowsFromObjectArray(newArray);
+        
+        console.log("localStorage", getKeysObjects(KEY));
+        console.log("sorted", newArray);
+        //makeRowsFromObjectArray(getKeysObjects(KEY));
     }
     
     function CreateLocalStorageData(date, title, author) {
@@ -137,6 +143,7 @@
         
         var element = document.createElement("tr");
         element.setAttribute('id', +id);
+        element.setAttribute('class', 'dataRow');
         element.innerHTML = makeRowInnerHtml(id, status, name, author, date);
         $("#" + ID_TABLE_TASKS).append(element);
         return element;
@@ -206,7 +213,6 @@
     function makeRowsFromObjectArray(localStorageObjects) {
         if (localStorageObjects == null) 
             return;
-        
         for (var i = 0; i < localStorageObjects.length; i++) {
             var id = localStorageObjects[i].id,
                 title = localStorageObjects[i].title,
@@ -221,7 +227,7 @@
     
     /*
         clearing all inputTexts in arguments,
-        argument is the jquery link!
+        argument must be the jquery link!
     */
     function clearInputTexts(inputElement) {
         for (var i = 0; i < arguments.length; i++) {
@@ -240,6 +246,10 @@
             "Ноябрь", "Декабрь"
         ];
         
+        function addZeroInFront(number) {
+            return number > 9 ? number : '0' + number;
+        }
+        
         var day_ = date.getDay(),
             day = addZeroInFront(day_),
             month = date.getMonth(),
@@ -248,23 +258,51 @@
             minutes_ = date.getMinutes();
         
         var minutes = addZeroInFront(minutes_);
-        //var minutes = minutes_ > 9 ? minutes_ : '0' + minutes_;
-            
-        function addZeroInFront(number) {
-            return number > 9 ? number : '0' + number;
-        }
+        
         var result = day + ':' + monthNames[month] + ':' + year  + '   ' + hour + ':' + minutes;
         
         return result;
+
     }
     
+    
+    
+    /*
+        Sorting  feature:
+        return  null  if  not sorted,
+                new array  if sorted;
+    */
+    function sortObjectsArray(attribute, array) {
+        if (array == null || array.length < 2 ) return null;
+        
+        if (!(attribute in array[0])) return null;   
+        
+        var newArray = array.sort(compare); //Может скопировать ссылку, а не объект
+
+        return newArray;
+        
+        function compare(a, b) {
+            if (a[attribute] > b[attribute]) return 1;
+            if (a[attribute] < b[attribute]) return -1;
+            
+        }
+    }
+    
+    function deleteAllDataRows() {
+        var rows = $('#' + ID_TABLE_TASKS + ' tr.dataRow');
+        rows.detach();
+    }
+    
+
     
     /*
         Event functions
     */
+    
+    /*
+        Button event
+    */
     buttonAdd.onclick = function () {
- 
-        
         var author_ = $("#" + ID_AUTHOR).val(),
             author = author_.trim(),
             title_ = $("#" + ID_TITLE).val(),
@@ -279,10 +317,14 @@
         
         addToLocalStorage(date, title, author);
         
-        
         clearInputTexts($('#' + ID_AUTHOR), $('#' + ID_TITLE));
     };
     
+    
+    /*
+        delete button event 
+        delition row and localStotageObject
+    */
     $("#" + ID_TABLE_TASKS).on('click', 'input.delete-button', function(ev){
         var input = ev.target;
         var td = input.parentNode;
@@ -294,6 +336,9 @@
         
     });
     
+    /*
+        table's input text event on blur
+    */
     $("#" + ID_TABLE_TASKS).on('blur', '.writable-input', function(ev){
         var input = ev.target;
         var td = input.parentNode;
@@ -311,6 +356,10 @@
         }
     });
     
+    
+    /*
+        checkbox's event
+    */
     $("#" + ID_TABLE_TASKS).on('click', '.checkbox', function(ev) {
         var input = ev.target;
         var td = input.parentNode;
@@ -330,6 +379,21 @@
         }
         
     });
+    
+    /*
+        table header's sortable divs event
+    */
+    
+    $('#' + ID_TABLE_TASKS + ' div.sortable input').on('click', function(ev) {
+        var newArray = getKeysObjects(KEY),
+            elementWithAttribute = ev.target.parentNode.parentNode;
+        
+        newArray = sortObjectsArray(elementWithAttribute.getAttribute('id'), newArray);
+        deleteAllDataRows()
+        makeRowsFromObjectArray(newArray);
+        
+    });
+    
     
                                   
 })();
