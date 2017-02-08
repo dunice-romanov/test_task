@@ -18,11 +18,8 @@
     */
     function init() {
         var newArray = getKeysObjects(KEY);
-        newArray = sortObjectsArray('updated', newArray);
         makeRowsFromObjectArray(newArray);
         
-        console.log("localStorage", getKeysObjects(KEY));
-        console.log("sorted", newArray);
         //makeRowsFromObjectArray(getKeysObjects(KEY));
     }
     
@@ -389,8 +386,11 @@
             elementWithAttribute = ev.target.parentNode.parentNode;
         
         newArray = sortObjectsArray(elementWithAttribute.getAttribute('id'), newArray);
-        deleteAllDataRows()
-        makeRowsFromObjectArray(newArray);
+        
+        if (newArray != null) {
+            deleteAllDataRows()
+            makeRowsFromObjectArray(newArray);
+        }
         
     });
     
