@@ -1,11 +1,11 @@
 body {
-    background: azure url('assets/background.jpg') center no-repeat;
+    background: azure url(../assets/background.jpg) center repeat-y;
 }
 
 div.divInput {
     margin: 0 auto;
     text-align: center;
-    width: 500px;
+    width: 600px;
     padding: 10px;
     border: 1px dashed black;
     background: aquamarine;
