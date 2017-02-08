@@ -8,9 +8,12 @@
         ID_DIV_TABLE = "divTable",
         ID_TABLE_TASKS = "tableTasks",
         KEY = 'key',
-        KEY_SEPARATOR = ',';
+        KEY_SEPARATOR = ';|';
         
         
+    
+    makeRowsFromObjectArray(getKeysObjects(KEY));
+    
     function CreateLocalStorageData(date, title, author) {
         this.id = +date;
         this.title = title;
@@ -19,23 +22,6 @@
         this.updated = date;
     }
 
-    /*
-        Возможно нужен поиск одинаковых ключей перед добавлением
-    */
-    function addKeyToLocalStorage(key) {
-        var keys = localStorage.getItem(KEY),
-            keysArray;
-        if (keys != null) {
-            keysArray = keys.split(KEY_SEPARATOR);
-            keysArray.push(key);
-            keys = keysArray.join(KEY_SEPARATOR);
-        } else {
-            keysArray = [ key ];
-            keys = keysArray.join(KEY_SEPARATOR);
-        };
-        
-        localStorage.setItem(KEY, keys);
-    }
     
     function addToLocalStorage(date, title, author) {
         
@@ -44,39 +30,75 @@
             return JSON.stringify(localStorageData);
         }
         
-        var storageString = getLocalStorageString(date, title, author);
-        localStorage.setItem(+date, storageString);
+        var keysArray, 
+            newKeysString,
+            keys = localStorage.getItem(KEY),
+            newKey = getLocalStorageString(date, title, author); 
+        if (keys == null) {
+            keysArray = [ ];
+            keysArray.push(newKey);
+        } else {
+            keysArray = keys.split(KEY_SEPARATOR);
+            keysArray.push(newKey);
+            
+        }
+        
+        newKeysString = keysArray.join(KEY_SEPARATOR);
+        localStorage.setItem(KEY, newKeysString);
         
     }
     
-    /*
-        TODO: - учесть одинаковость аттрибутов и запретить выполнение лишних действий
-              - добавить возврат тру/фолс при замене и нет     
-    */
+    function getKeysObjects(key) {
+        
+        var storage = localStorage;
+        var keys = storage.getItem(KEY);
+        
+        if (keys == null) return null;
+        
+        var keysArray = keys.split(KEY_SEPARATOR),
+            keysArrayObjects = [],
+            newKeysArray = [],
+            newKeys;
+
+        for (var i = 0; i < keysArray.length; i++) {
+            keysArrayObjects[i] = JSON.parse(keysArray[i]);
+        }
+        return keysArrayObjects;
+    }
+    
+    
     function changeObjectInLocalStorage(id, attribute, value) {
-        function findObject(oldId) {
-            return JSON.parse(localStorage.getItem(id));
-        }
-        
-        
-        var oldId = id, 
-            oldLocalStorageObject = findObject(oldId),
-            localStorageObjectUpdatedString;
-        if (oldLocalStorageObject[attribute] == value) {
-            
-            return false;
-            
-        } else {
-            oldLocalStorageObject[attribute] = value;
-            oldLocalStorageObject.updated = new Date();
+        var storage = localStorage;
 
-            localStorageObjectUpdatedString = JSON.stringify(oldLocalStorageObject);
-
-            localStorage.removeItem(oldId);
-            localStorage.setItem(oldId, localStorageObjectUpdatedString);
-            return true;
-        }
+        var oldId = id,
+            keysArrayObjects = [],
+            newKeysArray = [],
+            newKeys;
+            
+        keysArrayObjects = getKeysObjects(KEY);    
         
+        for (var i = 0; i < keysArrayObjects.length; i++) {
+            if (oldId == keysArrayObjects[i].id) {
+
+                if (keysArrayObjects[i][attribute] == value) {
+                    return false;
+                }
+                else {
+                    keysArrayObjects[i][attribute] = value
+                    keysArrayObjects[i].updated = new Date();
+                }
+            }
+        }
+
+        for (var i = 0; i < keysArrayObjects.length; i++) {
+            newKeysArray[i] = JSON.stringify(keysArrayObjects[i]);
+        }
+
+        newKeys = newKeysArray.join(KEY_SEPARATOR);
+        storage.setItem(KEY, newKeys);
+        return true;
+
+                
     }
     
     
@@ -99,36 +121,22 @@
         return element;
     }
     
-    /*
-        TODO: Разобраться с форматом даты, что бы 
-        она нормально подключалась после обновления страницы
-    */
     
-    function makeRowsFromKeys(keys) {
-        if (keys == null) 
+    function makeRowsFromObjectArray(localStorageObjects) {
+        if (localStorageObjects == null) 
             return;
-        var keysArray = keys.split(KEY_SEPARATOR),
-            localStorageObjects = [],
-            storage = localStorage;
         
-        for(var i = 0; i < keysArray.length; i++) {
-            var localStrorageObject = JSON.parse(storage.getItem(keysArray[i]));
-            
-            localStorageObjects.push(localStrorageObject);
-        }
         for (var i = 0; i < localStorageObjects.length; i++) {
             var id = localStorageObjects[i].id,
                 title = localStorageObjects[i].title,
                 author = localStorageObjects[i].author,
                 done = localStorageObjects[i].done,
-                updated = localStorageObjects[i].date;
-                debugger;
-            makeRow(id, done, title, author, new Date(id));
+                updated = localStorageObjects[i].updated;
+                makeRow(id, done, title, author, new Date(updated));
         }
         
     }
     
-    makeRowsFromKeys(localStorage.getItem(KEY));
     
     /*
         clearing all inputTexts in arguments,
@@ -155,9 +163,11 @@
             month = date.getMonth(),
             year = date.getFullYear(),
             hour = date.getHours(),
-            minute = date.getMinutes();
+            minutes_ = date.getMinutes();
+            var minutes = minutes_ > 9 ? minutes_ : '0' + minutes_;
+            
         
-        var result = day + ':' + monthNames[month] + ':' + year  + '   ' + hour + ':' + minute;
+        var result = day + ':' + monthNames[month] + ':' + year  + '   ' + hour + ':' + minutes;
         
         return result;
     }
@@ -169,8 +179,10 @@
     buttonAdd.onclick = function () {
  
         
-        var author = $("#" + ID_AUTHOR).val(),
-            title = $("#" + ID_TITLE).val(),
+        var author_ = $("#" + ID_AUTHOR).val(),
+            author = author_.trim(),
+            title_ = $("#" + ID_TITLE).val(),
+            title = title_.trim(),
             date = new Date(),
             id = +date;
         
@@ -180,7 +192,6 @@
         var newRow = makeRow(id, false, title, author, date);
         
         addToLocalStorage(date, title, author);
-        addKeyToLocalStorage(id);
         
         
         clearInputTexts($('#' + ID_AUTHOR), $('#' + ID_TITLE));
@@ -188,7 +199,7 @@
     
     
     
-    $("#tableTasks").on('blur', '.writable-input', function(ev){
+    $("#" + ID_TABLE_TASKS).on('blur', '.writable-input', function(ev){
         var input = ev.target;
         var td = input.parentNode;
         var tr = td.parentNode;
@@ -196,13 +207,10 @@
         var id = $(tr).attr('id'), 
             attribute = $(td).attr('data-id'),
             value = $(input).val();
-        //console.log(localStorage.getItem(id));
         if (changeObjectInLocalStorage(id, attribute, value)) {
             
             var updated = $(tr).children().last();
             updated[0].innerText = getDateFormat(new Date());
-//            console.log('updated!');
-//            console.log(localStorage.getItem(id));
         } else {
             return;
         }
