@@ -11,8 +11,14 @@
         KEY_SEPARATOR = ';|';
         
         
-    
-    makeRowsFromObjectArray(getKeysObjects(KEY));
+    init();
+   
+    /*
+        initialize page on start
+    */
+    function init() {
+        makeRowsFromObjectArray(getKeysObjects(KEY));
+    }
     
     function CreateLocalStorageData(date, title, author) {
         this.id = +date;
@@ -48,6 +54,10 @@
         
     }
     
+    /*
+        parse array of localStorageObjects from string;
+        return null if object is empty;
+    */
     function getKeysObjects(key) {
         
         var storage = localStorage;
@@ -105,21 +115,82 @@
     function makeRow(id, status, name, author, date) {
         
         function makeRowInnerHtml(id, status, name, author, date) {
-            var TAG_INPUT_FIRST_HALF = "<input class='writable-input' value='",
+            var TAG_INPUT_FIRST_HALF = "<input type='text' class='writable-input' value='",
                 TAG_INPUT_SECOND_HALF = "'>";
             var htmlResult = "<td data-id='done'>" +  status +  "</td>" +  
                 "<td data-id='title'>" + TAG_INPUT_FIRST_HALF + name + TAG_INPUT_SECOND_HALF + "</td>" + 
                 "<td data-id='author'>" + TAG_INPUT_FIRST_HALF + author + TAG_INPUT_SECOND_HALF + "</td>" + 
-                "<td data-id='updated'>" + getDateFormat(date) + "</td>";
+                "<td data-id='updated'>" + getDateFormat(date) + "</td>" +
+                "<td data-id='delete'>" + "<input type='button' class='delete-button' value='x'>" + "</td>";
             return htmlResult;
         }
         
         var element = document.createElement("tr");
-        element.setAttribute('id', +date);
+        element.setAttribute('id', +id);
         element.innerHTML = makeRowInnerHtml(id, status, name, author, date);
         $("#" + ID_TABLE_TASKS).append(element);
         return element;
     }
+    
+    /*
+        delete row by id;
+        return true if found&deleted,
+               else if id doesn't exist
+    */
+    function deleteRowById(id) {
+        var table = $("#" + ID_TABLE_TASKS + " #" + id);
+        if (table.length == 0) return false;
+        
+        table.detach();
+        return true;
+    }
+    
+    /*
+        delete object in localStorage by id;
+        return true if found&deleted,
+               else if id doesn't exist
+    */
+    function deleteObjectInLocalStorageById(id) {
+        var storage = localStorage;
+
+        var oldId = id,
+            keysArrayObjects = [],
+            newKeysArray = [],
+            newKeys,
+            isFoundFlag = false;
+            
+        keysArrayObjects = getKeysObjects(KEY);    
+ 
+        if (keysArrayObjects == null) {
+
+            return false;
+        }
+        
+        for (var i = 0; i < keysArrayObjects.length; i++) { 
+            if (oldId == keysArrayObjects[i].id) {
+                isFoundFlag = true;
+                keysArrayObjects.splice(i, 1);
+            }
+            if (isFoundFlag == true) break;
+        }
+
+        if (isFoundFlag == false) 
+            return false;
+        
+        if (keysArrayObjects.length == 0) {
+            storage.removeItem(KEY);
+            return true;
+        }
+            
+            
+        for (var i = 0; i < keysArrayObjects.length; i++) {
+            newKeysArray[i] = JSON.stringify(keysArrayObjects[i]);
+        }
+        newKeys = newKeysArray.join(KEY_SEPARATOR);
+        storage.setItem(KEY, newKeys);
+        return true;
+    }
+    
     
     
     function makeRowsFromObjectArray(localStorageObjects) {
@@ -159,14 +230,19 @@
             "Ноябрь", "Декабрь"
         ];
         
-        var day = date.getDay(), 
+        var day_ = date.getDay(),
+            day = addZeroInFront(day_),
             month = date.getMonth(),
             year = date.getFullYear(),
             hour = date.getHours(),
             minutes_ = date.getMinutes();
-            var minutes = minutes_ > 9 ? minutes_ : '0' + minutes_;
-            
         
+        var minutes = addZeroInFront(minutes_);
+        //var minutes = minutes_ > 9 ? minutes_ : '0' + minutes_;
+            
+        function addZeroInFront(number) {
+            return number > 9 ? number : '0' + number;
+        }
         var result = day + ':' + monthNames[month] + ':' + year  + '   ' + hour + ':' + minutes;
         
         return result;
@@ -197,7 +273,16 @@
         clearInputTexts($('#' + ID_AUTHOR), $('#' + ID_TITLE));
     };
     
-    
+    $("#" + ID_TABLE_TASKS).on('click', 'input.delete-button', function(ev){
+        var input = ev.target;
+        var td = input.parentNode;
+        var tr = td.parentNode;
+        var id = $(tr).attr('id');
+        
+        var ls = deleteObjectInLocalStorageById(+id);
+        var row = deleteRowById(+id); 
+        
+    });
     
     $("#" + ID_TABLE_TASKS).on('blur', '.writable-input', function(ev){
         var input = ev.target;
@@ -209,7 +294,7 @@
             value = $(input).val();
         if (changeObjectInLocalStorage(id, attribute, value)) {
             
-            var updated = $(tr).children().last();
+            var updated = $(tr).children().eq(3);
             updated[0].innerText = getDateFormat(new Date());
         } else {
             return;
