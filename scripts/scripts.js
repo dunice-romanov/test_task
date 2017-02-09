@@ -11,7 +11,8 @@
         KEY_SEPARATOR = ';|',
         CLASS_SORT_MINMAX = 'sorted-min-max',
         CLASS_SORT_MAXMIN = 'sorted-max-min',
-        CLASS_SORT_NONE = 'sorted-none';
+        CLASS_SORT_NONE = 'sorted-none',
+        TEXT_NO_INPUT = 'Please, enter both';
         
         
     init(); 
@@ -117,7 +118,10 @@
                 
     }
     
-    
+    /*
+    	makes a row from arguments,
+    	returns element <tr></tr>
+    */
     function makeRow(id, status, name, author, date) {
         
         function getCheckboxTag(status) {
@@ -371,8 +375,11 @@
             date = new Date(),
             id = +date;
         
-        if (author == '' || title == '') 
+        if (author == '' || title == '') {
+            alert(TEXT_NO_INPUT);
             return;
+        } 
+
         
         var newRow = makeRow(id, false, title, author, date);
         
