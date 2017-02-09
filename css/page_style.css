@@ -24,7 +24,7 @@ div.sortable input {
 
 
 #tableTasks {
-    width: 900px;
+    width: 70%;
     margin: 0 auto;
     text-align: center;
     font-family: 'Open Sans', sans-serif;
@@ -32,21 +32,7 @@ div.sortable input {
     border-collapse: collapse;
 }
 
-#done >  div.sortable {
-    width:  130px;
-}
 
-#title > div.sortable {
-    width: 150px;
-}
-
-#author > div.sortable {
-    width: 280px;
-}
-
-#updated > div.sortable {
-    width: 280px;
-}
 
 #tableTasks th {
     background: lightcoral;
@@ -117,7 +103,7 @@ input[type="button"] {
 }
 
 div.sortable input[type='button'] {
-    margin-left: 15px;
+    margin-left: 10px;
     width: 20px;
     height: 20px;
 }
@@ -127,6 +113,7 @@ div.sortable input[type='button'] {
     border-radius: 6px;
     background-color:azure;
     text-align: center;
+    width: 90%;
 }
 
 div.divInput input[type='text'] {
