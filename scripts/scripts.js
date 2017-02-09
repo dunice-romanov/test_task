@@ -241,14 +241,9 @@
     
     
     /*
-        return date string in format: dd:month:yyyy hh:mm
+        return date string in format: dd:mm:yyyy hh:mm
     */
     function getDateFormat(date) {
-        var monthNames = [
-            "Январь", "Февраль", "Март", "Апрель", "Май",
-            "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", 
-            "Ноябрь", "Декабрь"
-        ];
         
         function addZeroInFront(number) {
             return number > 9 ? number : '0' + number;
@@ -256,14 +251,15 @@
         
         var day_ = date.getDay(),
             day = addZeroInFront(day_),
-            month = date.getMonth(),
+            month_ = date.getMonth() + 1,     //'+ 1' is because getMonth() returns num from 0 to 11; 
+            month = addZeroInFront(month_),
             year = date.getFullYear(),
             hour = date.getHours(),
             minutes_ = date.getMinutes();
         
         var minutes = addZeroInFront(minutes_);
         
-        var result = day + ':' + monthNames[month] + ':' + year  + '   ' + hour + ':' + minutes;
+        var result = day + ':' + month + ':' + year  + '   ' + hour + ':' + minutes;
         
         return result;
 
