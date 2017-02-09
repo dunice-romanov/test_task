@@ -32,6 +32,10 @@ div.sortable input {
     border-collapse: collapse;
 }
 
+#done >  div.sortable {
+    width:  130px;
+}
+
 #tableTasks th {
     background: lightcoral;
     padding: 0 10px;
@@ -113,7 +117,15 @@ div.sortable input[type='button'] {
     text-align: center;
 }
 
+div.divInput input[type='text'] {
+    font-size: 20px;
+}
+div.divInput #textTitle {
+    width:  200px;
+}
+
 #tableTasks .writable-input:focus,
-#div.divInput input[type='text']:focus{
+div.divInput input[type='text']:focus{
     background-color: bisque;
 }
+
