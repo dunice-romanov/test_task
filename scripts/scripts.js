@@ -1,22 +1,19 @@
 (function () {
-    'use strict'
+    'use strict';
     
     var ID_AUTHOR = "textAuthor",
         ID_TITLE = "textTitle",
-        ID_BUTTON_ADD = "buttonAdd",
-        ID_DIV_INPUT = "divInput",
-        ID_DIV_TABLE = "divTable",
         ID_TABLE_TASKS = "tableTasks",
         KEY = 'key',
         KEY_SEPARATOR = ';|',
         CLASS_SORT_MINMAX = 'sorted-min-max',
         CLASS_SORT_MAXMIN = 'sorted-max-min',
-        CLASS_SORT_NONE = 'sorted-none',
         TEXT_NO_INPUT = 'Please, enter both';
         
         
     init(); 
    
+    
     /*
         initialize page on start
     */
@@ -24,8 +21,8 @@
         var newArray = getKeysObjects(KEY);
         makeRowsFromObjectArray(newArray);
         
-        //makeRowsFromObjectArray(getKeysObjects(KEY));
     }
+    
     
     function CreateLocalStorageData(date, title, author) {
         this.id = +date;
@@ -61,6 +58,7 @@
         
     }
     
+    
     /*
         parse array of localStorageObjects from string;
         return null if object is empty;
@@ -73,9 +71,7 @@
         if (keys === null) return null;
         
         var keysArray = keys.split(KEY_SEPARATOR),
-            keysArrayObjects = [],
-            newKeysArray = [],
-            newKeys;
+            keysArrayObjects = [];
 
         for (var i = 0; i < keysArray.length; i++) {
             keysArrayObjects[i] = JSON.parse(keysArray[i]);
@@ -101,7 +97,7 @@
                     return false;
                 }
                 else {
-                    keysArrayObjects[i][attribute] = value
+                    keysArrayObjects[i][attribute] = value;
                     keysArrayObjects[i].updated = new Date();
                 }
             }
@@ -117,6 +113,7 @@
 
                 
     }
+    
     
     /*
     	makes a row from arguments,
@@ -153,6 +150,7 @@
         return element;
     }
     
+    
     /*
         delete row by id;
         return true if found&deleted,
@@ -160,11 +158,12 @@
     */
     function deleteRowById(id) {
         var table = $("#" + ID_TABLE_TASKS + " #" + id);
-        if (table.length == 0) return false;
+        if (table.length === 0) return false;
         
         table.detach();
         return true;
     }
+    
     
     /*
         delete object in localStorage by id;
@@ -192,13 +191,13 @@
                 isFoundFlag = true;
                 keysArrayObjects.splice(i, 1);
             }
-            if (isFoundFlag == true) break;
+            if (isFoundFlag === true) break;
         }
 
-        if (isFoundFlag == false) 
+        if (isFoundFlag === false) 
             return false;
         
-        if (keysArrayObjects.length == 0) {
+        if (keysArrayObjects.length === 0) {
             storage.removeItem(KEY);
             return true;
         }
@@ -266,7 +265,6 @@
     }
     
     
-    
     /*
         Sorting  feature:
         return  null  if  not sorted,
@@ -287,7 +285,6 @@
         return newArray;
         
         function compareMinToMax(a, b) {
-            ;
             if (a[attribute] > b[attribute]) return 1;
             if (a[attribute] < b[attribute]) return -1;  
         }
@@ -319,7 +316,6 @@
         var className = getSortClassFromObject(columnTableHeader, CLASS_SORT_MINMAX, CLASS_SORT_MAXMIN),
             newArray,
             tableRow;
-        ;
         if (className === null || className =="") {
             columnTableHeader.addClass(CLASS_SORT_MINMAX);
             className = CLASS_SORT_MINMAX;
@@ -377,7 +373,7 @@
         } 
 
         
-        var newRow = makeRow(id, false, title, author, date);
+        makeRow(id, false, title, author, date);
         
         addToLocalStorage(date, title, author);
         
@@ -395,8 +391,8 @@
         var tr = td.parentNode;
         var id = $(tr).attr('id');
         
-        var ls = deleteObjectInLocalStorageById(+id);
-        var row = deleteRowById(+id); 
+        deleteObjectInLocalStorageById(+id);
+        deleteRowById(+id); 
         
     });
     
@@ -450,10 +446,10 @@
     $('#' + ID_TABLE_TASKS + ' div.sortable input').on('click', function(ev) {
         var tableHeader = $(ev.target).parent().parent(),
             newArray = getKeysObjects(KEY);
-        newArray = sortColumns(tableHeader, newArray)
+        newArray = sortColumns(tableHeader, newArray);
         
-        if (newArray != null) {
-            deleteAllDataRows()
+        if (newArray !== null) {
+            deleteAllDataRows();
             makeRowsFromObjectArray(newArray);
         }
     });
