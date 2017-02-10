@@ -36,7 +36,7 @@ div.sortable input {
 
 #tableTasks th {
     background: lightcoral;
-    padding: 0 10px;
+    padding: 10px 10px;
     color: white;
     height:  40px;
     font-size: 20px;
@@ -91,6 +91,8 @@ div.divInput > input {
 }
 
 div.divInput > input[type="text"] {
+    outline: none;
+    border-radius: 4px;
     width: 150px;
 }
 

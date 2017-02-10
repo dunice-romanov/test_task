@@ -20,7 +20,6 @@
     function init() {
         var newArray = getKeysObjects(KEY);
         makeRowsFromObjectArray(newArray);
-        
     }
     
     
@@ -34,7 +33,6 @@
 
     
     function addToLocalStorage(date, title, author) {
-        
         function getLocalStorageString(date, title, author) {
             var localStorageData = new CreateLocalStorageData(date, title, author);
             return JSON.stringify(localStorageData);
@@ -116,7 +114,7 @@
     
     
     /*
-    	makes a row from arguments,
+    	append new row  to the table from arguments,
     	returns element <tr></tr>
     */
     function makeRow(id, status, name, author, date) {
@@ -309,7 +307,7 @@
         returns new sorted localStorageArray by watching table headear's class
             or null if cant sort;
         
-        if class = none or class=CLASS_SORT_MINMAX -> sort CLASS_SORT_MINMAX, change class to CLASS_SORT_MAXMIN
+        if class = none or class = CLASS_SORT_MINMAX -> sort CLASS_SORT_MINMAX, change class to CLASS_SORT_MAXMIN
         if class = CLASS_SORT_MAXMIN  -> sort max-min, change class to CLASS_SORT_MINMAX 
     */
     function sortColumns(columnTableHeader, localStorageObjectsArray) {
