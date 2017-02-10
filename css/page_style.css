@@ -34,8 +34,6 @@ div.sortable input {
     border-collapse: collapse;
 }
 
-
-
 #tableTasks th {
     background: lightcoral;
     padding: 10px 10px;
@@ -49,6 +47,7 @@ div.sortable input {
 #tableTasks td {
     font-size: 20px;
 }
+
 #tableTasks td {
     padding: 5px;
 }
@@ -64,7 +63,6 @@ div.sortable input {
     background-color:  orangered;
     color: antiquewhite
 }
-
 
 #tableTasks th, 
 #tableTasks td {
@@ -98,7 +96,6 @@ div.divInput > input[type="text"] {
     width: 150px;
 }
 
-
 input[type="button"] {
     width: 100;
     border-radius: 8px;
@@ -123,6 +120,7 @@ div.sortable input[type='button'] {
 div.divInput input[type='text'] {
     font-size: 20px;
 }
+
 div.divInput #textTitle {
     width:  200px;
 }
@@ -131,4 +129,3 @@ div.divInput #textTitle {
 div.divInput input[type='text']:focus{
     background-color: bisque;
 }
-
