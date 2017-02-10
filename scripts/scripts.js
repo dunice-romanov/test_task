@@ -78,6 +78,11 @@
     }
     
     
+    /*
+        finds first object with arguments and rewrite it;
+        return  true if rewrote;
+                else if can't find;
+    */
     function changeObjectInLocalStorage(id, attribute, value) {
         var storage = localStorage;
 
@@ -108,13 +113,11 @@
         newKeys = newKeysArray.join(KEY_SEPARATOR);
         storage.setItem(KEY, newKeys);
         return true;
-
-                
     }
     
     
     /*
-    	append new row  to the table from arguments,
+    	appends new row  to the table from arguments,
     	returns element <tr></tr>
     */
     function makeRow(id, status, name, author, date) {
@@ -210,7 +213,9 @@
     }
     
     
-    
+    /*
+        appends  rows  from  localStorageObject;
+    */
     function makeRowsFromObjectArray(localStorageObjects) {
         if (localStorageObjects === null) 
             return;
@@ -451,7 +456,6 @@
             makeRowsFromObjectArray(newArray);
         }
     });
-    
     
                                   
 })();
