@@ -256,7 +256,7 @@
         
         var minutes = addZeroInFront(minutes_);
         
-        var result = day + ':' + month + ':' + year  + '   ' + hour + ':' + minutes;
+        var result = day + '.' + month + '.' + year  + '   ' + hour + ':' + minutes;
         
         return result;
 
