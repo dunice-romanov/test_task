@@ -1,4 +1,4 @@
-(function () {
+$(document).ready(function() {
     'use strict';
     
     var ID_AUTHOR = "textAuthor",
@@ -18,10 +18,17 @@
         initialize page on start
     */
     function init() {
+        initDataTable();
         var newArray = getKeysObjects(KEY);
         makeRowsFromObjectArray(newArray);
     }
     
+    function initDataTable() { 
+         $('#' + ID_TABLE_TASKS).dataTable({
+            "searching": false,
+             "ordering": false
+         });
+      }
     
     function CreateLocalStorageData(date, title, author) {
         this.id = +date;
@@ -147,7 +154,7 @@
         element.setAttribute('id', +id);
         element.setAttribute('class', 'dataRow');
         element.innerHTML = makeRowInnerHtml(id, status, name, author, date);
-        $("#" + ID_TABLE_TASKS).append(element);
+        //$("#" + ID_TABLE_TASKS).append(element);
         return element;
     }
     
@@ -158,10 +165,12 @@
                else if id doesn't exist
     */
     function deleteRowById(id) {
-        var table = $("#" + ID_TABLE_TASKS + " #" + id);
-        if (table.length === 0) return false;
+        var tableRow = $("#" + ID_TABLE_TASKS + " #" + id);
         
-        table.detach();
+        if (tableRow.length === 0) return false;
+        
+        $('#' + ID_TABLE_TASKS).DataTable().row(tableRow).remove().draw();
+        
         return true;
     }
     
@@ -224,8 +233,9 @@
                 title = localStorageObjects[i].title,
                 author = localStorageObjects[i].author,
                 done = localStorageObjects[i].done,
-                updated = localStorageObjects[i].updated;
-                makeRow(id, done, title, author, new Date(updated));
+                updated = localStorageObjects[i].updated,
+                tableRow = makeRow(id, done, title, author, new Date(updated));
+                $("#" + ID_TABLE_TASKS).DataTable().row.add(tableRow).draw();
         }
         
     }
@@ -251,7 +261,7 @@
             return number > 9 ? number : '0' + number;
         }
         
-        var day_ = date.getDay(),
+        var day_ = date.getDate(),
             day = addZeroInFront(day_),
             month_ = date.getMonth() + 1,     //'+ 1' is because getMonth() returns num from 0 to 11; 
             month = addZeroInFront(month_),
@@ -350,8 +360,8 @@
     
     
     function deleteAllDataRows() {
-        var rows = $('#' + ID_TABLE_TASKS + ' tr.dataRow');
-        rows.detach();
+        //var rows = $('#' + ID_TABLE_TASKS + ' tr.dataRow');
+        $('#' + ID_TABLE_TASKS).DataTable().clear().draw();
     }
     
     
@@ -376,8 +386,12 @@
         } 
 
         
-        makeRow(id, false, title, author, date);
+        var table = $("#" + ID_TABLE_TASKS).DataTable(),
+            actualPageNumber = table.page();
         
+        var tableRow = makeRow(id, false, title, author, date);
+        table.row.add(tableRow).draw();
+        table.page(actualPageNumber).draw('page');
         addToLocalStorage(date, title, author);
         
         clearInputTexts($('#' + ID_AUTHOR), $('#' + ID_TITLE));
@@ -428,7 +442,6 @@
         var td = input.parentNode;
         var tr = td.parentNode;
         
-        
         var id = $(tr).attr('id'), 
             attribute = $(td).attr('data-id'),
             value = input.checked;
@@ -442,6 +455,9 @@
         }
         
     });
+        
+
+
     
     /*
         table header's sortable divs event
@@ -449,6 +465,8 @@
     $('#' + ID_TABLE_TASKS + ' div.sortable input').on('click', function(ev) {
         var tableHeader = $(ev.target).parent().parent(),
             newArray = getKeysObjects(KEY);
+        
+        
         newArray = sortColumns(tableHeader, newArray);
         
         if (newArray !== null) {
@@ -458,4 +476,4 @@
     });
     
                                   
-})();
+});

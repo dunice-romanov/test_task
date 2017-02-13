@@ -7,7 +7,4 @@ features:
 - adding, renaming, deleting
 - sorting
 - saving data in local storage and "waking up" after page refresh
-
-not implemented: 
-
 - pagination

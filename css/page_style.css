@@ -16,6 +16,7 @@ div.divInput {
 
 div.divTable {
     margin: 0 auto;
+    width: 70%;
     margin-bottom: 50px;
 }
 
@@ -26,7 +27,7 @@ div.sortable input {
 
 
 #tableTasks {
-    width: 80%;
+    width: auto;
     margin: 0 auto;
     text-align: center;
     font-family: 'Open Sans', sans-serif;
