@@ -8,7 +8,8 @@ $(document).ready(function() {
         KEY_SEPARATOR = ';|',
         CLASS_SORT_MINMAX = 'sorted-min-max',
         CLASS_SORT_MAXMIN = 'sorted-max-min',
-        TEXT_NO_INPUT = 'Please, enter both';
+        TEXT_NO_INPUT = 'Please, enter both',
+        DATA_OLD_VALUE = 'data-old-value';
         
         
     init(); 
@@ -154,7 +155,6 @@ $(document).ready(function() {
         element.setAttribute('id', +id);
         element.setAttribute('class', 'dataRow');
         element.innerHTML = makeRowInnerHtml(id, status, name, author, date);
-        //$("#" + ID_TABLE_TASKS).append(element);
         return element;
     }
     
@@ -358,9 +358,7 @@ $(document).ready(function() {
         }
     }
     
-    
     function deleteAllDataRows() {
-        //var rows = $('#' + ID_TABLE_TASKS + ' tr.dataRow');
         $('#' + ID_TABLE_TASKS).DataTable().clear().draw();
     }
     
@@ -414,16 +412,33 @@ $(document).ready(function() {
     });
     
     /*
+        table's input text event on focus
+    */
+    
+    $("#" + ID_TABLE_TASKS).on('focus', '.writable-input', function(ev){
+        var input = $(ev.target);
+        input.attr(DATA_OLD_VALUE, input.val());
+        
+    });
+    
+    
+    /*
         table's input text event on blur
     */
     $("#" + ID_TABLE_TASKS).on('blur', '.writable-input', function(ev){
         var input = ev.target;
         var td = input.parentNode;
         var tr = td.parentNode;
-        
         var id = $(tr).attr('id'), 
             attribute = $(td).attr('data-id'),
-            value = $(input).val();
+            value = $(input).val().trim();
+        if (value == "") {
+            input.value = input.getAttribute(DATA_OLD_VALUE);
+            return;
+        }
+        
+        input.value = value;
+        
         if (changeObjectInLocalStorage(id, attribute, value)) {
             
             var updated = $(tr).children().eq(3);
@@ -457,21 +472,22 @@ $(document).ready(function() {
     });
         
 
-
-    
     /*
         table header's sortable divs event
     */
     $('#' + ID_TABLE_TASKS + ' div.sortable input').on('click', function(ev) {
         var tableHeader = $(ev.target).parent().parent(),
-            newArray = getKeysObjects(KEY);
-        
+            newArray = getKeysObjects(KEY),
+            table = $('#' + ID_TABLE_TASKS).DataTable();
         
         newArray = sortColumns(tableHeader, newArray);
         
         if (newArray !== null) {
+            var actualPageNumber = table.page();
             deleteAllDataRows();
             makeRowsFromObjectArray(newArray);
+            table.page(actualPageNumber).draw('page');
+            
         }
     });
     
